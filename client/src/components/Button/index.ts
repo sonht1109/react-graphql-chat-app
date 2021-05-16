@@ -4,6 +4,8 @@ import theme from "../../common/theme";
 
 interface IButton extends ButtonHTMLAttributes<any> {
   color?: "white" | "blue";
+  width?: string;
+  height?: string
 }
 
 const buttonTheme = {
@@ -19,14 +21,15 @@ const buttonTheme = {
 
 const Button = styled.button<IButton>`
   display: block;
-  width: 100%;
-  height: 36px;
+  width: ${props => props.width || "100%"};
+  height: ${props => props.height || "36px"};
   font-family: ${theme.fonts.K2D};
   cursor: pointer;
   border-radius: 4px;
   color: ${(props) => buttonTheme[props.color || "blue"].text};
   font-weight: 600;
   background-color: ${(props) => buttonTheme[props.color || "blue"].bgColor};
+  padding: 0 15px;
   &:disabled{
     background-color: ${theme.colors.primary.gray};
     cursor: not-allowed;

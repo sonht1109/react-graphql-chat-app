@@ -61,7 +61,7 @@ module.exports = {
         
         // throw error
         if (Object.keys(errors).length) {
-          throw new UserInputError("BAD_INPUT", errors);
+          throw new UserInputError("BAD_INPUT", {errors});
         }
 
         // return token

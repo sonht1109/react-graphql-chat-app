@@ -2,24 +2,26 @@ import { useMutation } from "@apollo/client";
 import { faSms } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import SSignup from "./styles";
-import { SIGNUP_MUTATION } from "./queries";
+import { REGISTER_MUTATION } from "./queries";
 import Loading from "../../components/Loading";
 import { toast } from "react-toastify";
 
 export default function Signup() {
+  const history = useHistory();
 
-  const [signup, { loading }] = useMutation(SIGNUP_MUTATION, {
-    update(_, res) {
-      console.log(res);
+  const [register, { loading }] = useMutation(REGISTER_MUTATION, {
+    update(_, __) {
+      toast.success("Sign up successfully");
+      history.push("/login");
     },
     onError(err) {
-      let errors = err.graphQLErrors[0].extensions?.errors
-      if(errors){
-        toast.error(errors[Object.keys(errors)[0]])
+      let errors = err.graphQLErrors[0].extensions?.errors;
+      if (errors) {
+        toast.error(errors[Object.keys(errors)[0]]);
       }
     },
   });
@@ -39,7 +41,7 @@ export default function Signup() {
   };
 
   const onSubmit = () => {
-    signup({ variables: { ...info } });
+    register({ variables: { ...info } });
   };
 
   return (
@@ -77,7 +79,7 @@ export default function Signup() {
         <p className="login_or_signup">
           Already have an account? <Link to="/login">Log in</Link>
         </p>
-        <Button onClick={onSubmit} color="white">
+        <Button onClick={onSubmit} color="white" disabled={loading}>
           {loading ? <Loading /> : "Sign up"}
         </Button>
       </div>

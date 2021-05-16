@@ -13,6 +13,10 @@ const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
   }
 
+  .toast-body{
+    font-family: ${theme.fonts.K2D};
+  }
+
   p, label, h1, h2, h3, h4, h5, h6{
     margin: 0;
   }

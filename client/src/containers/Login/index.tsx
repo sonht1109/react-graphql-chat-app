@@ -2,12 +2,31 @@ import { useLazyQuery } from "@apollo/client";
 import { faSms } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import SLogin from "./styles";
+import { LOGIN_QUERY } from "./queries";
+import Loading from "../../components/Loading";
+import { toast } from "react-toastify";
 
 export default function Login() {
+
+  const history = useHistory()
+
+  const [login, { loading }] = useLazyQuery(LOGIN_QUERY, {
+    onError(err) {
+      let errors = err.graphQLErrors[0].extensions?.errors;
+      if (errors) {
+        toast.error(errors[Object.keys(errors)[0]]);
+      }
+    },
+    onCompleted(data: any){
+      localStorage.setItem('jwt', data.login.token)
+      history.push('/')
+    }
+  });
+
   const [info, setInfo] = useState({
     email: "",
     password: "",
@@ -21,7 +40,7 @@ export default function Login() {
   };
 
   const onSubmit = () => {
-    console.log(info);
+    login({ variables: { ...info } });
   };
 
   return (
@@ -46,8 +65,8 @@ export default function Login() {
         <p className="login_or_signup">
           Don't have an account? <Link to="/signup">Sign up</Link>
         </p>
-        <Button onClick={onSubmit} color="white">
-          Log in
+        <Button onClick={onSubmit} color="white" disabled={loading}>
+          {loading ? <Loading /> : "Log in"}
         </Button>
       </div>
     </SLogin>
