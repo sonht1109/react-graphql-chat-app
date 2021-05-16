@@ -2,6 +2,7 @@ const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 const { UserInputError, AuthenticationError } = require("apollo-server-errors");
 const jwt = require('jsonwebtoken');
+const {Op} = require('sequelize')
 const {JWT_SECRET_KEY} = require('../config/env.json')
 
 const errorTypes = [
@@ -11,15 +12,34 @@ const errorTypes = [
 
 module.exports = {
   Query: {
+
     // ===> getUsers
-    getUsers: async () => {
+    getUsers: async (_, __, ctx) => {
+      // authenticate
+      let user;
+
+      if(ctx.req && ctx.req.headers.authorization){
+        const token = ctx.req.headers.authorization.split('Bearer ')[1]
+        jwt.verify(token, JWT_SECRET_KEY, (err, decodeToken) => {
+          if(err){
+            throw new AuthenticationError("UNAUTHENTICATE")
+          }
+          else user = decodeToken
+        })
+      }
+
       try {
-        const users = await User.findAll();
+        // get users except user who does query
+        const users = await User.findAll({
+          where: {email: {[Op.ne]: user.email} }
+        });
         return users;
       } catch (err) {
-        console.log("get users", err);
+        console.log("GET_USERS", err);
+        throw err
       }
     },
+
     // ===> login
     login: async (_, args) => {
       const { email, password } = args;
@@ -48,13 +68,18 @@ module.exports = {
         const token = jwt.sign({email}, JWT_SECRET_KEY)
         user.token = token
 
-        return user;
+        return {
+          ...user.toJSON(),
+          token,
+          createdAt: user.createdAt.toISOString()
+        };
       } catch (err) {
         console.log("LOGIN", err);
         throw err;
       }
     },
   },
+
   Mutation: {
     // ===> register
     register: async (_, args) => {
@@ -86,7 +111,7 @@ module.exports = {
         if (errorTypes.includes(err.name)) {
           err.errors.forEach((e) => (errors[e.path] = e.message));
         }
-        throw new UserInputError("BAD_INPUT", errors);
+        throw new UserInputError("BAD_INPUT", {errors});
       }
     },
   },
