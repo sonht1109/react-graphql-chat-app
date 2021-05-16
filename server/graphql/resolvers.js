@@ -1,6 +1,8 @@
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
-const { UserInputError } = require("apollo-server-errors");
+const { UserInputError, AuthenticationError } = require("apollo-server-errors");
+const jwt = require('jsonwebtoken');
+const {JWT_SECRET_KEY} = require('../config/env.json')
 
 const errorTypes = [
   "SequelizeUniqueConstraintError",
@@ -9,6 +11,7 @@ const errorTypes = [
 
 module.exports = {
   Query: {
+    // ===> getUsers
     getUsers: async () => {
       try {
         const users = await User.findAll();
@@ -17,8 +20,43 @@ module.exports = {
         console.log("get users", err);
       }
     },
+    // ===> login
+    login: async (_, args) => {
+      const { email, password } = args;
+      let errors = {};
+      try {
+        // find user
+        const user = await User.findOne({
+          where: { email },
+        });
+
+        if (!user) {
+          errors.user = "Cannot find user !";
+        } else {
+          const comparePassword = await bcrypt.compare(password, user.password);;
+          if (!comparePassword) {
+            errors.password = "Password is incorrect !";
+          }
+        }
+        
+        // throw error
+        if (Object.keys(errors).length) {
+          throw new UserInputError("BAD_INPUT", errors);
+        }
+
+        // return token
+        const token = jwt.sign({email}, JWT_SECRET_KEY)
+        user.token = token
+
+        return user;
+      } catch (err) {
+        console.log("LOGIN", err);
+        throw err;
+      }
+    },
   },
   Mutation: {
+    // ===> register
     register: async (_, args) => {
       let { username, email, password, confirmPassword } = args;
       const errors = {};
