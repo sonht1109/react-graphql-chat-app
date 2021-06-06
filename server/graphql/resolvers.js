@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Message } = require("../models");
 const bcrypt = require("bcryptjs");
 const { UserInputError, AuthenticationError } = require("apollo-server-errors");
 const jwt = require('jsonwebtoken');
@@ -16,22 +16,12 @@ module.exports = {
     // ===> getUsers
     getUsers: async (_, __, ctx) => {
       // authenticate
-      let user;
-
-      if(ctx.req && ctx.req.headers.authorization){
-        const token = ctx.req.headers.authorization.split('Bearer ')[1]
-        jwt.verify(token, JWT_SECRET_KEY, (err, decodeToken) => {
-          if(err){
-            throw new AuthenticationError("UNAUTHENTICATE")
-          }
-          else user = decodeToken
-        })
-      }
-
+      const {user} = ctx;
       try {
+        if(!user) throw new AuthenticationError("UNAUTHENTICATED")
         // get users except user who does query
         const users = await User.findAll({
-          where: {email: {[Op.ne]: user.email} }
+          where: {username: {[Op.ne]: user.username} }
         });
         return users;
       } catch (err) {
@@ -65,7 +55,7 @@ module.exports = {
         }
 
         // return token
-        const token = jwt.sign({email}, JWT_SECRET_KEY)
+        const token = jwt.sign({ username: user.username }, JWT_SECRET_KEY)
         user.token = token
 
         return {
@@ -114,5 +104,31 @@ module.exports = {
         throw new UserInputError("BAD_INPUT", {errors});
       }
     },
+
+    // ===> send message
+    sendMessage: async(_, {to, content}, {user}) => {
+      try{
+
+        if(!user) throw new AuthenticationError('UNAUTHENTICATED');
+
+        const recipent = await User.findOne({ where: {username: to} });
+        if(!recipent){
+          throw new UserInputError('USER_NOT_FOUND');
+        }
+
+        if(content.trim() === ''){
+          throw new UserInputError('MESSAGE_IS_EMPTY');
+        }
+        const message = await Message.create({
+          from: user.username,
+          to,
+          content
+        })
+      }
+      catch(err){
+        console.log(err);
+        throw err;
+      }
+    }
   },
 };
