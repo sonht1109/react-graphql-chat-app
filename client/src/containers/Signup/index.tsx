@@ -9,6 +9,7 @@ import SSignup from "./styles";
 import { REGISTER_MUTATION } from "./queries";
 import Loading from "../../components/Loading";
 import { toast } from "react-toastify";
+import REGEX from "../../utils/regex";
 
 export default function Signup() {
   const history = useHistory();
@@ -40,7 +41,8 @@ export default function Signup() {
     setInfo({ ...info, [name]: value });
   };
 
-  const onSubmit = () => {
+  const onSubmit = (e: any) => {
+    e.preventDefault();
     register({ variables: { ...info } });
   };
 
@@ -49,7 +51,7 @@ export default function Signup() {
       <div className="logo">
         <FontAwesomeIcon icon={faSms} color="white" size="8x" />
       </div>
-      <div className="form">
+      <form className="form" onSubmit={onSubmit}>
         <label className="form_input">
           <p>Email</p>
           <Input name="email" onChange={onChange} value={info.email} />
@@ -79,10 +81,10 @@ export default function Signup() {
         <p className="login_or_signup">
           Already have an account? <Link to="/login">Log in</Link>
         </p>
-        <Button onClick={onSubmit} color="white" disabled={loading}>
+        <Button type="submit" color="white" disabled={loading}>
           {loading ? <Loading /> : "Sign up"}
         </Button>
-      </div>
+      </form>
     </SSignup>
   );
 }

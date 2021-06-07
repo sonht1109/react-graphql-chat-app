@@ -11,6 +11,8 @@ import Loading from "../../components/Loading";
 import { toast } from "react-toastify";
 
 export default function Login() {
+  // sonht@mailinator.com
+  // 123456
 
   const history = useHistory()
 
@@ -23,7 +25,7 @@ export default function Login() {
     },
     onCompleted(data: any){
       localStorage.setItem('jwt', data.login.token)
-      history.push('/')
+      history.push('/chats')
     }
   });
 

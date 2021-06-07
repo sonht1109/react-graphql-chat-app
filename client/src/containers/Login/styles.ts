@@ -12,7 +12,7 @@ const SLogin = styled.div`
   padding: 20px 0;
   flex-direction: column;
   .form {
-    margin-top: 40px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     .form_input {

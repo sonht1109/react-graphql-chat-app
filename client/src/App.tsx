@@ -7,20 +7,16 @@ import GlobalStyle from "./common/globalStyle";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Home from "./containers/Home";
+import Chats from "./containers/Chats";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/" exact>
-          <Home />
-        </Route>
-        <Route path="/login" exact>
-          <Login />
-        </Route>
-        <Route path="/signup" exact>
-          <Signup />
-        </Route>
+        <Route path="/" exact component={Home}/>
+        <Route path="/login" exact component={Login} />
+        <Route path="/signup" exact component={Signup} />
+        <Route path="/chats" exact component={Chats} /> 
       </Switch>
       <GlobalStyle />
       <ToastContainer
