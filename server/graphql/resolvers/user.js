@@ -1,9 +1,9 @@
-const { User, Message } = require("../models");
+const { User } = require("../../models");
 const bcrypt = require("bcryptjs");
 const { UserInputError, AuthenticationError } = require("apollo-server-errors");
-const jwt = require('jsonwebtoken');
-const {Op} = require('sequelize')
-const {JWT_SECRET_KEY} = require('../config/env.json')
+const jwt = require("jsonwebtoken");
+const { Op } = require("sequelize");
+const { JWT_SECRET_KEY } = require("../../config/env.json");
 
 const errorTypes = [
   "SequelizeUniqueConstraintError",
@@ -12,21 +12,40 @@ const errorTypes = [
 
 module.exports = {
   Query: {
+    me: async (_, __, { user }) => {
+      try {
+        if (!user) throw new AuthenticationError("UNAUTHENTICATED");
+        const me = await User.findOne({
+          where: {username: user.username}
+        })
+        const token = jwt.sign({ username: me.username }, JWT_SECRET_KEY);
+        me.token = token;
 
+        return {
+          ...me.toJSON(),
+          token,
+          createdAt: me.createdAt.toISOString(),
+        };
+        
+      } catch (err) {
+        console.log("ME", err);
+        throw err;
+      }
+    },
     // ===> getUsers
     getUsers: async (_, __, ctx) => {
       // authenticate
-      const {user} = ctx;
+      const { user } = ctx;
       try {
-        if(!user) throw new AuthenticationError("UNAUTHENTICATED")
+        if (!user) throw new AuthenticationError("UNAUTHENTICATED");
         // get users except user who does query
         const users = await User.findAll({
-          where: {username: {[Op.ne]: user.username} }
+          where: { username: { [Op.ne]: user.username } },
         });
         return users;
       } catch (err) {
         console.log("GET_USERS", err);
-        throw err
+        throw err;
       }
     },
 
@@ -43,25 +62,25 @@ module.exports = {
         if (!user) {
           errors.user = "Cannot find user !";
         } else {
-          const comparePassword = await bcrypt.compare(password, user.password);;
+          const comparePassword = await bcrypt.compare(password, user.password);
           if (!comparePassword) {
             errors.password = "Password is incorrect !";
           }
         }
-        
+
         // throw error
         if (Object.keys(errors).length) {
-          throw new UserInputError("BAD_INPUT", {errors});
+          throw new UserInputError("BAD_INPUT", { errors });
         }
 
         // return token
-        const token = jwt.sign({ username: user.username }, JWT_SECRET_KEY)
-        user.token = token
+        const token = jwt.sign({ username: user.username }, JWT_SECRET_KEY);
+        user.token = token;
 
         return {
           ...user.toJSON(),
           token,
-          createdAt: user.createdAt.toISOString()
+          createdAt: user.createdAt.toISOString(),
         };
       } catch (err) {
         console.log("LOGIN", err);
@@ -101,34 +120,8 @@ module.exports = {
         if (errorTypes.includes(err.name)) {
           err.errors.forEach((e) => (errors[e.path] = e.message));
         }
-        throw new UserInputError("BAD_INPUT", {errors});
+        throw new UserInputError("BAD_INPUT", { errors });
       }
     },
-
-    // ===> send message
-    sendMessage: async(_, {to, content}, {user}) => {
-      try{
-
-        if(!user) throw new AuthenticationError('UNAUTHENTICATED');
-
-        const recipent = await User.findOne({ where: {username: to} });
-        if(!recipent){
-          throw new UserInputError('USER_NOT_FOUND');
-        }
-
-        if(content.trim() === ''){
-          throw new UserInputError('MESSAGE_IS_EMPTY');
-        }
-        const message = await Message.create({
-          from: user.username,
-          to,
-          content
-        })
-      }
-      catch(err){
-        console.log(err);
-        throw err;
-      }
-    }
   },
 };

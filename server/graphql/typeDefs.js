@@ -9,24 +9,32 @@ module.exports = gql`
     id: Int!
     createdAt: String
     token: String!
+    imageUrl: String
   }
 
   type Message {
     from: String!
     content: String!
     uuid: String!
-    createdAt: String
+    createdAt: String!
     to: String!
   }
 
   # query
   type Query {
+
+    me: User!
+
     getUsers: [User]!
+
     login(email: String! password: String!): User!
+
+    getMessages(from: String!): [Message]!
   }
 
   # mutation
   type Mutation {
+
     register(
       username: String!
       email: String!
