@@ -33,6 +33,10 @@ const GlobalStyle = createGlobalStyle`
       color: ${theme.colors.primary.gray};
     }
   }
+
+  .avt{
+    border-radius: 50%;
+  }
 `;
 
 export default GlobalStyle;

@@ -17,7 +17,8 @@ const SLogin = styled.div`
     flex-direction: column;
     .form_input {
       margin-bottom: 10px;
-      ${Input}{
+      ${Input} {
+        width: calc(100% - 30px);
         background-color: transparent;
         border: 1px solid ${theme.colors.primary.gray};
         border-radius: 4px;
@@ -29,7 +30,7 @@ const SLogin = styled.div`
       }
     }
     ${Button} {
-      width: calc(100% + 30px);
+      width: calc(100%);
       margin-top: 20px;
     }
   }
