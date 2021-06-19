@@ -6,12 +6,11 @@ import avt from "../../../assets/images/avt-placeholder.png";
 export default function Friends() {
   return (
     <SFriends>
-      <Input placeholder="Search ..." />
-      {[1, 2, 3].map((_, index) => (
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((_, index) => (
         <SFriendItem key={index}>
           <img className="avt" alt="avt" src={avt} width={48} height={48} />
           <div className="message">
-            <h4 className="username">dp.thaovy</h4>
+            <h4 className="username">dp.thaovy {index + 1}</h4>
             <p className="last-message">
               Amet culpa eu est proident aute consectetur. Veniam culpa nostrud
               commodo id dolore proident cillum consectetur fugiat nisi.

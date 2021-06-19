@@ -3,7 +3,9 @@ import theme from "../../../common/theme";
 import Input from "../../../components/Input";
 
 const SFriends = styled.div`
-  height: 100%;
+  height: 100vh;
+  padding: 10px;
+  overflow: auto;
   ${Input} {
     border: 1px solid ${theme.colors.primary.gray};
     margin-bottom: 10px;
@@ -16,7 +18,7 @@ export const SFriendItem = styled.div`
   padding: 10px;
   border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 5px;
+  margin: 0 -10px 5px;
   .message {
     position: relative;
     margin-left: 10px;
