@@ -16,10 +16,7 @@ export default function BoxInput() {
 }
 
 export const SInputBox = styled.div`
-  position: absolute;
-  bottom: 0;
-  padding-right: 20px;
-  padding-left: 10px;
+  padding: 0 10px 10px;
   display: flex;
   align-items: center;
   ${Input} {

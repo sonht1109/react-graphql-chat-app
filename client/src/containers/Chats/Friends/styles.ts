@@ -1,15 +1,23 @@
 import styled from "styled-components";
+import { mixinsScrollBar } from "../../../common/mixins";
 import theme from "../../../common/theme";
 import Input from "../../../components/Input";
 
 const SFriends = styled.div`
-  height: 100vh;
-  padding: 10px;
-  overflow: auto;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   ${Input} {
     border: 1px solid ${theme.colors.primary.gray};
     margin-bottom: 10px;
   }
+  .friends-container {
+    overflow-y: auto;
+    ${mixinsScrollBar};
+    height: 100%;
+    padding: 10px;
+  }
+    padding-bottom: 20px;
 `;
 
 export const SFriendItem = styled.div`
