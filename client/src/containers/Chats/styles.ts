@@ -19,16 +19,20 @@ export const SLeft = styled.div`
   ${Input} {
     border: 1px solid ${theme.colors.primary.light_gray};
   }
-  .header {
+  .header-left {
     display: flex;
     align-items: center;
     padding: 10px;
     .avt {
       border-radius: 50%;
     }
-    h3 {
+    .submenu {
       margin-left: auto;
-      color: ${theme.colors.primary.blue};
+      position: relative;
+      cursor: pointer;
+      h3 {
+        color: ${theme.colors.primary.blue};
+      }
     }
   }
 `;

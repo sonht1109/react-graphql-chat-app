@@ -20,7 +20,6 @@ const SLogin = styled.div`
       ${Input} {
         width: calc(100% - 30px);
         background-color: transparent;
-        border: 1px solid ${theme.colors.primary.gray};
         border-radius: 4px;
         color: ${theme.colors.primary.gray};
       }

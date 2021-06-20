@@ -8,7 +8,6 @@ const SFriends = styled.div`
   height: 100%;
   overflow: hidden;
   ${Input} {
-    border: 1px solid ${theme.colors.primary.gray};
     margin-bottom: 10px;
   }
   .friends-container {

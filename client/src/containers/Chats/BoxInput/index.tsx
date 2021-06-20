@@ -16,12 +16,10 @@ export default function BoxInput() {
 }
 
 export const SInputBox = styled.div`
-  padding: 0 10px 10px;
+  padding: 10px 10px 15px;
   display: flex;
   align-items: center;
-  ${Input} {
-    border: 1px solid ${theme.colors.primary.gray};
-  }
+  border-top: 1px solid ${theme.colors.primary.gray};
   .icon {
     margin-left: 10px;
     width: 24px;

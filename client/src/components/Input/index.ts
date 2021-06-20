@@ -10,6 +10,7 @@ const Input = styled.input`
   padding: 0 15px;
   font-family: ${theme.fonts.K2D};
   width: calc(100% - 30px);
+  border: 1px solid ${theme.colors.primary.gray};
 `;
 
 export default Input;

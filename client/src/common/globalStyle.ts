@@ -37,6 +37,11 @@ const GlobalStyle = createGlobalStyle`
   .avt{
     border-radius: 50%;
   }
+
+  a{
+    text-decoration: none;
+    color: inherit;
+  }
 `;
 
 export default GlobalStyle;
