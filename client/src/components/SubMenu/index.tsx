@@ -1,4 +1,4 @@
-import React, { Children, ReactNode, useEffect, useRef, useState } from "react";
+import React, { Children, ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import theme from "../../common/theme";
@@ -18,17 +18,17 @@ export interface ISubMenu {
 }
 
 export default function SubMenu({ menus, parent, minWidth = "0px" }: ISubMenu) {
-  const ref = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
+
+    const parentCurrent = parent.current;
+
     function handleClickOutside(event: any) {
-      if (ref.current && !ref.current.contains(event.target)) {
+      if (parentCurrent && !parentCurrent.contains(event.target)) {
         setIsOpen(false);
       }
     }
-
-    const parentCurrent = parent.current;
 
     document.addEventListener("mousedown", handleClickOutside);
     if (parent && parentCurrent) {
@@ -49,7 +49,7 @@ export default function SubMenu({ menus, parent, minWidth = "0px" }: ISubMenu) {
   }, []);
 
   return (
-    <SSubMenu {...{ isOpen, minWidth }} ref={ref}>
+    <SSubMenu {...{ isOpen, minWidth }}>
       {Children.toArray(
         menus.map((m) =>
           m.type === "link" ? (
@@ -105,7 +105,8 @@ const SSubMenu = styled.div<{ minWidth: string; isOpen: boolean }>`
     display: flex;
     cursor: pointer;
     align-items: center;
-    padding: 8px 10px;
+    padding: 10px;
+    text-decoration: none;
     img {
       margin-right: 10px;
     }

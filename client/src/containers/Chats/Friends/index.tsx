@@ -1,5 +1,4 @@
 import React from "react";
-import Input from "../../../components/Input";
 import SFriends, { SFriendItem } from "./styles";
 import avt from "../../../assets/images/avt-placeholder.png";
 

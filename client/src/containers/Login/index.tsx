@@ -1,7 +1,6 @@
 import { useLazyQuery } from "@apollo/client";
 import { faSms } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
@@ -9,12 +8,24 @@ import SLogin from "./styles";
 import { LOGIN_QUERY } from "./queries";
 import Loading from "../../components/Loading";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
+import { ILogin } from "./types";
+import globalMessages from "../../utils/globalMessages";
+import REGEX from "../../utils/regex";
+import ErrorMessage from "../../components/ErrorMessage";
+import theme from "../../common/theme";
 
 export default function Login() {
   // sonht@mailinator.com
-  // 123456
+  // 12345678
 
-  const history = useHistory()
+  const history = useHistory();
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
 
   const [login, { loading }] = useLazyQuery(LOGIN_QUERY, {
     onError(err) {
@@ -23,26 +34,14 @@ export default function Login() {
         toast.error(errors[Object.keys(errors)[0]]);
       }
     },
-    onCompleted(data: any){
-      localStorage.setItem('jwt', data.login.token)
-      history.push('/chats')
-    }
+    onCompleted(data: any) {
+      localStorage.setItem("token", data.login.token);
+      history.push("/chats");
+    },
   });
 
-  const [info, setInfo] = useState({
-    email: "",
-    password: "",
-  });
-
-  const onChange = (e: any) => {
-    const target = e.target;
-    const name = target.name;
-    const value = target.value;
-    setInfo({ ...info, [name]: value });
-  };
-
-  const onSubmit = () => {
-    login({ variables: { ...info } });
+  const onSubmit = (data: ILogin) => {
+    login({ variables: { ...data } });
   };
 
   return (
@@ -50,27 +49,52 @@ export default function Login() {
       <div className="logo">
         <FontAwesomeIcon icon={faSms} color="white" size="8x" />
       </div>
-      <div className="form">
+      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+
         <label className="form_input">
           <p>Email</p>
-          <Input name="email" onChange={onChange} value={info.email} />
+          <Input
+            {...register("email", {
+              required: globalMessages.validate.REQUIRED,
+              pattern: {
+                value: REGEX.EMAIL,
+                message: globalMessages.validate.WRONG_PATTERN,
+              },
+            })}
+          />
         </label>
+        {errors.email && (
+          <ErrorMessage color={theme.colors.primary.yellow}>
+            {errors.email.message}
+          </ErrorMessage>
+        )}
+
         <label className="form_input">
           <p>Password</p>
           <Input
-            name="password"
             type="password"
-            onChange={onChange}
-            value={info.password}
+            {...register("password", {
+              required: globalMessages.validate.REQUIRED,
+              pattern: {
+                value: REGEX.PASSWORD_ANY,
+                message: globalMessages.validate.WRONG_PATTERN,
+              },
+            })}
           />
         </label>
+        {errors.password && (
+          <ErrorMessage color={theme.colors.primary.yellow}>
+            {errors.password.message}
+          </ErrorMessage>
+        )}
+        
         <p className="login_or_signup">
           Don't have an account? <Link to="/signup">Sign up</Link>
         </p>
-        <Button onClick={onSubmit} color="white" disabled={loading}>
+        <Button type="submit" color="white" disabled={loading}>
           {loading ? <Loading /> : "Log in"}
         </Button>
-      </div>
+      </form>
     </SLogin>
   );
 }

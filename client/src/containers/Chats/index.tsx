@@ -8,10 +8,17 @@ import Input from "../../components/Input";
 import { subMenus } from "./data/index";
 import SubMenu from "../../components/SubMenu";
 import { useRef } from "react";
+import { useHistory } from "react-router";
 
 export default function Chats() {
 
   const parentRef = useRef<HTMLDivElement>(null);
+  const history = useHistory();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    history.replace('/login');
+  }
 
   return (
     <SChats>
@@ -20,7 +27,7 @@ export default function Chats() {
           <img className="avt" src={avt} alt="avt" height={48} width={48} />
           <div className="submenu" ref={parentRef}>
             <h3>Chats</h3>
-            <SubMenu parent={parentRef} menus={subMenus} />
+            <SubMenu parent={parentRef} menus={subMenus(handleLogout)} />
           </div>
         </div>
         <div style={{ padding: "10px" }}>

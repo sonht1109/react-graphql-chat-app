@@ -8,27 +8,27 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Home from "./containers/Home";
 import Chats from "./containers/Chats";
-import AuthProvider from "./lib/context/auth";
+import ProtectedRoute from "./lib/ProtectedRoute";
+import NewMessageSearching from "./containers/NewMessageSearching";
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/login" exact component={Login} />
-          <Route path="/signup" exact component={Signup} />
-          <Route path="/chats" exact component={Chats} />
-        </Switch>
-        <GlobalStyle />
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          draggable
-          pauseOnHover
-          bodyClassName="toast-body"
-        />
-      </BrowserRouter>
-    </AuthProvider>
+    <BrowserRouter>
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/login" exact component={Login} />
+        <Route path="/signup" exact component={Signup} />
+        <ProtectedRoute path="/chats" exact component={Chats} />
+        <ProtectedRoute path="/new-message" exact component={NewMessageSearching} />
+      </Switch>
+      <GlobalStyle />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        draggable
+        pauseOnHover
+        bodyClassName="toast-body"
+      />
+    </BrowserRouter>
   );
 }

@@ -20,7 +20,7 @@ const SChatDetail = styled.div`
     height: 100%;
     padding-right: 10px;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     .message {
       border-radius: 20px;
       padding: 10px;
