@@ -4,16 +4,23 @@ import {
   faSms,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useLayoutEffect } from "react";
 import { useHistory } from "react-router";
 import theme from "../../common/theme";
 import Button from "../../components/Button";
-import SHome from "./styles";
+import SOnboarding from "./styles";
 
-export default function Home() {
+export default function Onboarding() {
   const history = useHistory();
 
+  useLayoutEffect(() => {
+    if(localStorage.getItem('token')){
+      history.replace('/chats')
+    }
+  }, [])
+
   return (
-    <SHome>
+    <SOnboarding>
       <div className="logo">
         <FontAwesomeIcon icon={faGlobeAsia} color="white" size="6x" />
         <FontAwesomeIcon icon={faSms} color="white" size="6x" />
@@ -34,6 +41,6 @@ export default function Home() {
           />{" "}
         </Button>
       </div>
-    </SHome>
+    </SOnboarding>
   );
 }

@@ -123,5 +123,7 @@ module.exports = {
         throw new UserInputError("BAD_INPUT", { errors });
       }
     },
+
+    // ===> update profile
   },
 };

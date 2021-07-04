@@ -10,6 +10,7 @@ module.exports = gql`
     createdAt: String
     token: String!
     imageUrl: String
+    # friends: [String!]
   }
 
   type Message {

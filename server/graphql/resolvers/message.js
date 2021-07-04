@@ -50,7 +50,9 @@ module.exports = {
           to,
           content,
         });
+        
         return message;
+
       } catch (err) {
         console.log("SEND_MESSAGE", err);
         throw err;

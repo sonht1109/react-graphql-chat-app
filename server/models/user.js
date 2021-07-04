@@ -45,6 +45,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.DATE,
       },
+      // friends: {
+      //   allowNull: false,
+      //   type: DataTypes.ARRAY(DataTypes.STRING)
+      // }
     },
     {
       sequelize,

@@ -11,3 +11,9 @@ export const ME = gql`
     }
   }
 `
+
+export const INFO_CLIENT = gql`
+  query infoClient {
+    infoClient @client
+  }
+`

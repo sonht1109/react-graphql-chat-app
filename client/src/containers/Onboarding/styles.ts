@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { mixinFlexCenter } from "../../common/mixins";
 import theme from "../../common/theme";
 
-const SHome = styled.div`
+const SOnboarding = styled.div`
   width: 100vw;
   height: 100vh;
   ${mixinFlexCenter};
@@ -19,4 +19,4 @@ const SHome = styled.div`
   }
 `
 
-export default SHome
+export default SOnboarding

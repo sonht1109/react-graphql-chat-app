@@ -33,6 +33,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      // friends: {
+      //   allowNull: false,
+      //   type: Sequelize.ARRAY(Sequelize.STRING)
+      // }
     });
   },
   down: async (queryInterface, Sequelize) => {

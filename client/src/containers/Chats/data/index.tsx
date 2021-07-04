@@ -13,10 +13,9 @@ export const subMenus = (handleLogout: () => void): ISubMenuItem[] => [
   },
   {
     title: "New message",
-    href: "/new-message",
+    href: "/chats/new-message",
     icon: <img src={newMessageIcon} alt="new-message" width={16} height={16} />,
-    type: "trigger",
-    callback: handleLogout,
+    type: "link",
   },
   {
     title: "Log out",
