@@ -2,18 +2,23 @@ import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styled, { keyframes } from "styled-components";
 import sendIcon from "../../../assets/images/send.svg";
-import imageIcon from "../../../assets/images/image.svg";
+// import imageIcon from "../../../assets/images/image.svg";
 import theme from "../../../common/theme";
 import Input from "../../../components/Input";
 import TextareaAutosize from "react-textarea-autosize";
 
 export default function BoxInput() {
-  const { register, handleSubmit, watch, setFocus, control } = useForm();
+  const { register, handleSubmit, watch, setFocus, control, reset } = useForm({
+    defaultValues: {
+      message: ''
+    }
+  });
 
   const watchMessage = watch("message");
 
   const onSubmit = (data: { message: string }) => {
     console.log(data);
+    reset();
   };
 
   useEffect(() => {
@@ -22,9 +27,9 @@ export default function BoxInput() {
 
   const canSendMessage = watchMessage && watchMessage?.trim() !== "";
 
-  const handleChooseFile = (e: any) => {
-    console.log(e.target.files);
-  };
+  // const handleChooseFile = (e: any) => {
+  //   console.log(e.target.files);
+  // };
 
   return (
     <SInputBox onSubmit={handleSubmit(onSubmit)}>
@@ -36,15 +41,16 @@ export default function BoxInput() {
         )}
       />
 
-      <label style={{ marginLeft: "10px" }}>
+      {/* <label style={{ marginLeft: "10px" }}>
         <input
           onChange={handleChooseFile}
           className="file"
           type="file"
           accept="image/png, image/jpeg"
         />
-        <img src={imageIcon} alt="files" width={24} height={24} />
-      </label>
+        <img src={imageIcon} alt="files" width={20} height={20} />
+      </label> */}
+
       {canSendMessage && (
         <button type="submit" className={`icon`}>
           <img src={sendIcon} alt="send" width={24} height={24} />
@@ -85,6 +91,10 @@ export const SInputBox = styled.form`
     outline: none;
     resize: none;
     font-family: ${theme.fonts['K2D']};
+  }
+  ${Input}{
+    background-color: ${theme.colors.primary.gray};
+    flex-grow: 1;
   }
   .file {
     display: none;

@@ -13,8 +13,8 @@ import AuthProvider from "./lib/AuthProvider";
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <Switch>
           <Route path="/" exact component={Onboarding} />
           <Route path="/login" exact component={Login} />
@@ -26,15 +26,15 @@ export default function App() {
             component={NewMessage}
           />
         </Switch>
-        <GlobalStyle />
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          draggable
-          pauseOnHover
-          bodyClassName="toast-body"
-        />
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+      <GlobalStyle />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        draggable
+        pauseOnHover
+        bodyClassName="toast-body"
+      />
+    </BrowserRouter>
   );
 }

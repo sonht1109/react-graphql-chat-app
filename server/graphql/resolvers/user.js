@@ -16,8 +16,8 @@ module.exports = {
       try {
         if (!user) throw new AuthenticationError("UNAUTHENTICATED");
         const me = await User.findOne({
-          where: {username: user.username}
-        })
+          where: { username: user.username },
+        });
         const token = jwt.sign({ username: me.username }, JWT_SECRET_KEY);
         me.token = token;
 
@@ -26,21 +26,26 @@ module.exports = {
           token,
           createdAt: me.createdAt.toISOString(),
         };
-        
       } catch (err) {
         console.log("ME", err);
         throw err;
       }
     },
     // ===> getUsers
-    getUsers: async (_, __, ctx) => {
+    getUsers: async (_, args, ctx) => {
       // authenticate
       const { user } = ctx;
+      const username = args.username || '';
       try {
         if (!user) throw new AuthenticationError("UNAUTHENTICATED");
         // get users except user who does query
         const users = await User.findAll({
-          where: { username: { [Op.ne]: user.username } },
+          where: {
+            username: {
+              [Op.ne]: user.username,
+              [Op.like]: "%" + username + "%",
+            },
+          },
         });
         return users;
       } catch (err) {
